@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-color
+  namespace: ckad
+spec: 
+  containers:
+    - name: webapp-color
+      image: kodekloud/webapp-color
+      args: ["--color", "green"]
+

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: insurance-api-v2
+  namespace: nm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  insurance-api
+      version: new
+  template:
+    metadata:
+      labels:
+        app:  insurance-api
+        version: new
+    spec:
+      containers:
+      - name: insurance-api
+        image: emersso.azurecr.io/insurancev2:11.0.5
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+            httpHeaders:
+            - name: X-Custom-Header
+              value: Awesome
+          initialDelaySeconds: 90
+          periodSeconds: 10
+        env:              
+        - name: "DeviceName" 
+          value: "aStrangeDevice"        
+      imagePullSecrets:
+      - name: topsecretregistryconnection
+   

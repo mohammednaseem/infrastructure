@@ -1,0 +1,34 @@
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: insurance-api-service-friendly-name # just a name
+  namespace: nm
+spec:
+  hosts:
+    - insurance-api-service.nm.svc.cluster.local    #name of regular k8 service where the custom routing rules are applied. changed from round robin
+  http:
+    - route:
+        - destination:
+            host: insurance-api-service.nm.svc.cluster.local  # the target dns name
+            subset: old-man
+          weight: 90
+        - destination:
+            host: insurance-api-service.nm.svc.cluster.local  # the target dns name
+            subset: new-guy
+          weight: 10
+---
+kind: DestinationRule                          # define which parts of each  subsets
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: insurance-api-service-dr-friendly-name  # just a name
+  namespace: nm
+spec:
+  host: insurance-api-service.nm.svc.cluster.local      # dns name = association with vs
+  subsets:
+    - labels:
+        version: old
+      name: old-man
+    - labels:
+        version: new
+      name: new-guy
+

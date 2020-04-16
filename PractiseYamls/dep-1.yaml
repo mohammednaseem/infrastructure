@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: deployment-1
+  namespace: nm
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      name: busybox-pod
+  template:
+    metadata: 
+      labels:
+        name: busybox-pod
+    spec:
+      containers:
+      - name: busybox-container
+        image: busybox
+        env:
+        - name: SPECIAL_LEVEL_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: special-config
+              key: special.how
+        - name: SPECIAL_TYPE_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: special-config
+              key: special.type
+        command:
+        - sh
+        - "-c"
+        - echo Hello Kubernetes! && sleep 3600

@@ -1,0 +1,22 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: deployment2
+spec:
+  selector:
+    matchLabels:
+      app: httpdapline
+  template:
+    metadata:
+      labels:
+        app: httpdapline
+    spec:
+      containers:
+      - name: httpdapline
+        image: httpd:2.4-alpine
+        resources:
+          limits:
+            memory: "32Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 80

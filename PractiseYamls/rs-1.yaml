@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ReplicaSet
+metadata: 
+  name: replicaset-1
+  namespace: nm
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      tier: front-end
+  template:
+    metadata: 
+      labels:
+        tier: front-end
+    spec:
+      containers:
+        name: nginx
+        image: nginx
