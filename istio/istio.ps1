@@ -1,5 +1,6 @@
 # Specify the Istio version that will be leveraged throughout these instructions
-$ISTIO_VERSION="1.4.0"
+#$ISTIO_VERSION="1.4.0"
+$ISTIO_VERSION="1.6.0"
 
 # Enforce TLS 1.2
 [Net.ServicePointManager]::SecurityProtocol = "tls12"

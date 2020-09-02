@@ -34,19 +34,39 @@ spec:
     route:
     - destination:
         host: healthcare-api-service.nm.svc.cluster.local
+    corsPolicy:
+      allowOrigin:
+      - "*"
+      allowMethods:
+      - POST
+      - GET
+      allowHeaders:
+      - content-type
+      exposeHeaders:
+      - x-custom-header
   - name: "Hospital"    
     match:
-    - uri:
-        prefix: "/hospital"   
-    rewrite:
-      uri: "/Weatherforecast"
+    - uri:       
+        prefix: "/hospital"
     route:
     - destination:
-        host: hospital-api-service.nm.svc.cluster.local    
-    - name: "RegexTest"    
-      match:
-      - uri:
-          regex: "/."  # regex not working.. TODO:  fix later.
+        host: hospital-api-service.nm.svc.cluster.local 
+    corsPolicy:
+      allowOrigin:
+      - "^"
+      allowMethods:
+      - POST
+      - GET
+      - PATCH
+      - DELETE
+      allowHeaders:
+      - content-type
+      exposeHeaders:
+      - x-custom-header   
+  - name: "RegexTest"    
+    match:
+    - uri:
+        regex: "/."  # regex not working.. TODO:  fix later.
     rewrite:
       uri: "/Weatherforecast"
     route:

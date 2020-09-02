@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoice-api   
+  namespace: pitstop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  invoice-api   
+  template:
+    metadata:
+      labels:
+        app:  invoice-api   
+    spec:
+      containers:
+      - name: invoice-api   
+        image: nousvptestacr.azurecr.io/pitstop-invoice:0.0.2
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 80      
+      imagePullSecrets:
+      - name: nousecretregistryconnection
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: invoice-api-service   
+  namespace: db2019
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80      
+  selector:
+    app:  invoice-api   

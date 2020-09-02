@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ibmace-api
+  namespace: ace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  ibmace-api
+  template:
+    metadata:
+      labels:
+        app:  ibmace-api
+    spec:
+      containers:
+      - name: ibmace-api
+        image: dockerstore.azurecr.io/aceapp:0.0.1         
+        ports:
+        - name: apper
+          containerPort: 7600   
+        - name: management
+          containerPort: 7800     
+        - name: something
+          containerPort: 7843              
+        env:              
+        - name: "LICENSE" 
+          value: "accept"       
+        - name: "ACE_SERVER_NAME"
+          value: "ACESERVER"
+        - name: "ACE_TRUSTSTORE_PASSWORD"
+          value: "truststorepwd"
+        - name: "ACE_KEYSTORE_PASSWORD"
+          value: "keystorepwd"   
+      imagePullSecrets:
+      - name: topsecretregistryconnection
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ibmace-api-service
+  namespace: ace
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+  - name: apper
+    port: 7600
+    targetPort: 7600
+  - name: management
+    port: 7800
+    targetPort: 7800
+  - name: something
+    port: 7843
+    targetPort: 7843
+  selector:
+    app:  ibmace-api

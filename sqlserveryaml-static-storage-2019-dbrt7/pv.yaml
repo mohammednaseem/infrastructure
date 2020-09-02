@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: az-disk-19-pv-dbrt7
+  namespace: dbrt7
+spec:
+  capacity:
+    storage: 10Gi
+  storageClassName: ""
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  azureDisk:
+    kind: Managed
+    diskName: sqlserver7
+    diskURI:  /subscriptions/2d3e797c-a450-4a57-8aac-e7ffb72a7570/resourceGroups/BLR_Azure_CoC_C1/providers/Microsoft.Compute/disks/sqlserver7

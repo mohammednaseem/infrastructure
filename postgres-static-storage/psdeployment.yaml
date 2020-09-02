@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgre-deployment
+  namespace: postdb
+spec:
+  replicas: 1
+  selector:
+     matchLabels:
+       app: postgre
+  template:
+    metadata:
+      labels:
+        app: postgre    
+    spec:      
+      terminationGracePeriodSeconds: 10       
+      securityContext:         
+        runAsGroup: 0
+        runAsUser: 0          
+      containers:
+      - name: postgre
+        image: nousvptestacr.azurecr.io/ps:29080830
+        ports:
+        - containerPort: 1433
+        env:
+        - name: POSTGRES_DB
+          value: pustakalaya
+        - name: POSTGRES_USER
+          value: pustakalaya_user
+        - name: POSTGRES_PASSWORD
+          value: pustakalaya123
+        - name: PGDATA
+          value: /data
+        - name: POSTGRES_BACKUP_DIR
+          value: /backup
+        volumeMounts:
+          - mountPath: /data:rw
+            name: pgmaster-volume  
+        ports:
+        - containerPort: 5432    
+      imagePullSecrets:
+      - name: nousecretregistryconnection
+      volumes:
+      - name: pgmaster-volume
+        persistentVolumeClaim:
+          claimName: post-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgre-deployment-service
+  namespace: postdb
+spec:
+  selector:
+    app: postgre
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: LoadBalancer

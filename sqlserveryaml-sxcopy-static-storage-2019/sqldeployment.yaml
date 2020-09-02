@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-deployment
+  namespace: db2020
+spec:
+  replicas: 1
+  selector:
+     matchLabels:
+       app: mssql
+  template:
+    metadata:
+      labels:
+        app: mssql    
+    spec:      
+      terminationGracePeriodSeconds: 10      
+      securityContext:
+        fsGroup: 10009
+        runAsGroup: 10009
+        runAsUser: 10001     
+      containers:
+      - name: mssql
+        image: nousvptestacr.azurecr.io/sqlserver2019:281401
+        ports:
+        - containerPort: 1433
+        env:
+        - name: MSSQL_PID
+          value: "Developer"
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mssql
+              key: SA_PASSWORD 
+        volumeMounts:
+        - name: mssqldb
+          mountPath: /var/opt/mssql        
+      imagePullSecrets:
+      - name: nousecretregistryconnection
+      volumes:
+      - name: mssqldb
+        azureDisk:
+          kind: Managed
+          diskName: Kube_static_disk20191
+          diskURI:  /subscriptions/2d3e797c-a450-4a57-8aac-e7ffb72a7570/resourceGroups/MC_BLR_Azure_CoC_C1_maltax_centralus/providers/Microsoft.Compute/disks/Kube_static_disk20191
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-deployment
+  namespace: db2020
+spec:
+  selector:
+    app: mssql
+  ports:
+    - protocol: TCP
+      port: 1433
+      targetPort: 1433
+  type: LoadBalancer

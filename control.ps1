@@ -11,14 +11,14 @@ $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github
 Expand-Archive -Path "istio-$ISTIO_VERSION.zip" -DestinationPath .
 
 # win10 on azure
-istioctl manifest apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\istio.aks.yaml --logtostderr --set installPackagePath=istioctl  --logtostderr --set installPackagePath=C:\Kube\cloudnative\aksistio\KubeYaml\istio\istio-1.4.0\install\kubernetes\operator\charts
+istioctl manifest apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\istio.aks.yaml --logtostderr --set installPackagePath=istioctl  --logtostderr --set installPackagePath=D:\kube\istio-1.4.0\install\kubernetes\operator\charts
 # my local box
 istioctl  manifest apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\istio.aks.yaml --logtostderr --set installPackagePath=C:\Users\hp\Documents\istio-1.4.0\install\kubernetes\operator\charts
 istioctl manifest apply -f istio.aks.yaml --logtostderr --set installPackagePath=./install/kubernetes/operator/charts
 
-kubectl create namespace istio-system --save-config
-kubectl apply -f C:\Kube\cloudnative\aksistio\KubeYaml\kiali.yaml
-kubectl apply -f C:\Kube\cloudnative\aksistio\KubeYaml\grafana.yaml
+
+kubectl apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\kiali.yaml
+kubectl apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\grafana.yaml
 
 kubectl create namespace nm
 kubectl label namespace nm istio-injection=enabled
@@ -37,12 +37,12 @@ istioctl dashboard kiali
 
 istioctl dashboard envoy <pod-name>.<namespace>
 
-az acr login -n emerxo
+az acr login -n dockerstore
 
-kubectl create secret docker-registry topsecretregistryconnection connection --docker-server dockerstore.azurecr.io --docker-email naseem.mohammed@slkgroup.com --docker-username=dockerstore --docker-password nTN/lSTFLemDqR5NF8lV0q221cReuOPo
+kubectl create secret docker-registry topsecretregistryconnection connection --docker-server dockeec.io --docker-email naem.moup.com --docker-username=dock tore --docker-password nTN/lSTF q221cReuOPo
 
-az aks get-credentials --name malxxdtax -g OneSimRG --admin
+az aks get-credentials --name malter -g OneSimRG --admin
 
-az aks create --resource-group oneSimRG --name malter --generate-ssh-keys --aad-server-app-id 349356c2-a9c204d6d59f --aad-server-app-secret Cit89K8/xm]? --aad-client-app-id ce4b1527180 --aad-tenant-id 5d528d1a65b7 --service-principal 5301f7f8b2 --client-secret 2f868008eeb2b --node_count=2
+az aks create --resource-group onmRG --name mater --generate-ssh-keys --aad-server-app-id 349356-b9c204d6d59f --aad-server-app-secret /.yto.:HRT4Hcdh1N --aad-client-app-id ce4b1fd8-0726527180 --aad-tenant-id 5d528a6b2-d70b3d1a65b7 --service-principal 5301fa3ed8007f8b2 --client-secret GsziiY9g2iSp-eJSq. --node_count=2
  
 

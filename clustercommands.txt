@@ -1,0 +1,57 @@
+============================================= my account ================================================
+
+az aks create --resource-group naseem  --name maltax --generate-ssh-keys --location southeastasia --aad-server-app-id 349356c2-7830-45a0-94db-b9c204d6d59f --aad-server-app-secret @7vv1?=1[6yGJw:rq5v:9v_L:Fkt8Xam  --aad-client-app-id ce4b1fd8-9b3a-45ce-ab35-080726527180 --aad-tenant-id 5d528a67-2229-4fae-98b2-d70b3d1a65b7  --service-principal 2bb65ced-aa97-439f-8374-586a80b79c78 --client-secret 8b68541f-0aba-4c57-b687-50d48d3c5f5b --node-count 2
+az aks create --resource-group BLR_Azure_CoC_C1  --name maltax --generate-ssh-keys --location centralus --aad-server-app-id 349356c2-7830-45a0-94db-b9c204d6d59f --aad-server-app-secret @7vv1?=1[6yGJw:rq5v:9v_L:Fkt8Xam  --aad-client-app-id ce4b1fd8-9b3a-45ce-ab35-080726527180 --aad-tenant-id 5d528a67-2229-4fae-98b2-d70b3d1a65b7  --service-principal 41b8e47d-6325-403b-a883-4e89ed8f6b5b --client-secret dbc4659e-5a04-4e00-bfe9-8bb9f3f0475a --node-count 2
+
+az aks get-credentials --name maltax -g BLR_Azure_CoC_C1 --admin
+
+
+kubectl create namespace nm
+kubectl label namespace nm istio-injection=enabled
+
+kubectl create namespace ckad
+kubectl label namespace ckad istio-injection=enabled
+
+kubectl create secret docker-registry topsecretregistryconnection --docker-server dockerstore.azurecr.io  --docker-username dockerstore --docker-password nTN/lSTFLemDqR5NF8lV0q221cReuOPo --docker-email naseem.mohammed@slkgroup.com -n nm
+kubectl create secret docker-registry topsecretregistryconnection --docker-server dockerstore.azurecr.io  --docker-username dockerstore --docker-password nTN/lSTFLemDqR5NF8lV0q221cReuOPo --docker-email naseem.mohammed@slkgroup.com -n ckad
+kubectl create secret docker-registry topsecretregistryconnection --docker-server naseem.azurecr.io  --docker-username naseem --docker-password Rg1biNwWrf8digopFwI/UnQ=S6ntZDNu --docker-email m.naseem@outlook.com -n default
+
+
+kubectl create namespace istio-system
+kubectl apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\kiali.yaml -n istio-system
+kubectl apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\grafana.yaml -n istio-system
+
+#istioctl manifest apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\istio.aks.yaml --logtostderr --set installPackagePath=istioctl  --logtostderr --set installPackagePath=D:\kube\istio-1.4.0\install\kubernetes\operator\charts
+ 
+kubectl get svc --namespace istio-system --output wide
+kubectl get pods --namespace istio-system
+
+============================================= sunny account ================================================
+
+az aks create --resource-group onesimrg  --name maltax --generate-ssh-keys --location southeastasia --aad-server-app-id 349356c2-7830-45a0-94db-b9c204d6d59f --aad-server-app-secret @7vv1?=1[6yGJw:rq5v:9v_L:Fkt8Xam  --aad-client-app-id ce4b1fd8-9b3a-45ce-ab35-080726527180 --aad-tenant-id 5d528a67-2229-4fae-98b2-d70b3d1a65b7  --service-principal 2bb65ced-aa97-439f-8374-586a80b79c78 --client-secret 8b68541f-0aba-4c57-b687-50d48d3c5f5b --node-count 2
+
+az aks get-credentials --name maltax -g onesimrg --admin
+
+
+kubectl create namespace nm
+kubectl label namespace nm istio-injection=enabled
+
+kubectl create namespace ckad
+kubectl label namespace ckad istio-injection=enabled
+
+kubectl create secret docker-registry topsecretregistryconnection --docker-server dockerstore.azurecr.io  --docker-username dockerstore --docker-password nTN/lSTFLemDqR5NF8lV0q221cReuOPo --docker-email naseem.mohammed@slkgroup.com -n nm
+kubectl create secret docker-registry topsecretregistryconnection --docker-server dockerstore.azurecr.io  --docker-username dockerstore --docker-password nTN/lSTFLemDqR5NF8lV0q221cReuOPo --docker-email naseem.mohammed@slkgroup.com -n ckad
+kubectl create secret docker-registry topsecretregistryconnection --docker-server dockerstore.azurecr.io  --docker-username dockerstore --docker-password nTN/lSTFLemDqR5NF8lV0q221cReuOPo --docker-email naseem.mohammed@slkgroup.com -n default
+
+
+kubectl create namespace istio-system
+kubectl apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\kiali.yaml -n istio-system
+kubectl apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\grafana.yaml -n istio-system
+
+istioctl manifest apply -f D:\kube\aksistio\aksistio\KubeYaml\istio\istio.aks.yaml --logtostderr --set installPackagePath=istioctl  --logtostderr --set installPackagePath=D:\kube\istio-1.4.0\install\kubernetes\operator\charts
+ 
+kubectl get svc --namespace istio-system --output wide
+kubectl get pods --namespace istio-system
+
+kubectl create secret generic mssql --from-literal=SA_PASSWORD="MyC0m9l&xP@ssw0rd" -n db
+

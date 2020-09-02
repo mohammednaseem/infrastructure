@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ibmappconnect-with-sidecarapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  ibmappconnect-with-sidecarapp
+      version: old
+  template:
+    metadata:
+      labels:
+        app:  ibmappconnect-with-sidecarapp
+        version: old
+    spec:
+      containers:
+      - name: sidecarapp
+        image: dockerhouse.azurecr.io/codeshipacroke:1cae7b76baabacb673356b0f388084a77d755fdb
+        ports:
+        - containerPort: 8000
+        env:              
+        - name: "AppConnectServer" 
+          value: "https://127.0.0.1:8443/ws/security"      
+        - name: AppConnectServerIP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP    
+      - name: ibmappconnect-app
+        image: dockerhouse.azurecr.io/ibmappconnect:7.5.2.0
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        - containerPort: 8443
+        - containerPort: 9443    
+        volumeMounts:
+          - name: ibmappconrun
+            mountPath: /var/run
+          - name: ibmappconbackups  
+            mountPath: /var/backups         
+          - name: ibmappconconfigurator
+            mountPath: /var/configurator         
+          - name: ibmappcondb
+            mountPath: /var/db
+          - name: ibmappconlocaldb
+            mountPath: /var/local_db          
+      volumes:
+      - name: ibmappconrun
+        persistentVolumeClaim:
+          claimName: azure-data-pvc1
+      - name: ibmappconbackups
+        persistentVolumeClaim:
+          claimName: azure-data-pvc3
+      - name: ibmappconconfigurator
+        persistentVolumeClaim:
+          claimName: azure-data-pvc2
+      - name: ibmappcondb
+        persistentVolumeClaim:
+          claimName: azure-data-pvc4
+      - name: ibmappconlocaldb
+        persistentVolumeClaim:
+          claimName: azure-data-pvc5
+      imagePullSecrets:
+      - name: topsecretregistryconnection
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ibmappconnect-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: httpsidecar
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
+  - name: httpibmappconnect
+    protocol: TCP
+    port: 80 
+    targetPort: 80     
+  - name: httpsibmappconnect
+    protocol: TCP
+    port: 443
+    targetPort: 443
+  - name: adminibmappconnect
+    protocol: TCP
+    port: 8443
+    targetPort: 8443
+  - name: adminsecureibmappconnect
+    protocol: TCP
+    port: 9443
+    targetPort: 9443
+  selector:
+    app:  ibmappconnect-with-sidecarapp
