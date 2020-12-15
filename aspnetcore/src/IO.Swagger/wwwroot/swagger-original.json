@@ -1,0 +1,268 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Healthcare",
+    "description" : "This is a API built for demo purpose. About patients and their treatment plan.",
+    "contact" : {
+      "email" : "m.naseem@outlook.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "1.0.3"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/Tonic.Tims/Healthcare/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  } ],
+  "tags" : [ {
+    "name" : "Patient",
+    "description" : "Patient related matters"
+  }, {
+    "name" : "Treatment plan",
+    "description" : "Treatment related matters"
+  } ],
+  "paths" : {
+    "/patient" : {
+      "get" : {
+        "tags" : [ "Patient" ],
+        "summary" : "Finds patient by id",
+        "description" : "By passing in the appropriate options, you can search for\nthe patient in the database\n",
+        "operationId" : "findPatient",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "AccessTokenHere"
+        }, {
+          "name" : "patientId",
+          "in" : "query",
+          "description" : "pass the patientId for looking up the database",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          },
+          "example" : 415
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search result matching criteria",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Patient"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Patient" ],
+        "summary" : "adds a patient to the list",
+        "description" : "Adds a patient to the system",
+        "operationId" : "addPatient",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Add Patient to list",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Patient"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "patient added"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "patient already exists"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Patient" ],
+        "summary" : "deletes a patient from list",
+        "description" : "Deletes a patient from the list",
+        "operationId" : "deletePatient",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "patientId",
+          "in" : "query",
+          "description" : "Patient id to delete",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      }
+    },
+    "/patient/{patientId}/treatmentplan" : {
+      "get" : {
+        "tags" : [ "Treatment plan" ],
+        "summary" : "Get patient's treatment plan",
+        "description" : "By passing in the patientId, you can get the  patient's treamtment plan\n",
+        "operationId" : "getTreatementPlan",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "patientId",
+          "in" : "path",
+          "description" : "pass the patientId for looking up the database",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search result matching criteria",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TreatmentPlan"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Patient" : {
+        "required" : [ "classification", "id", "name", "totalWeightInKilos" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Lionel Messi"
+          },
+          "totalWeightInKilos" : {
+            "type" : "integer",
+            "example" : 77
+          },
+          "classification" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "example" : "Normal",
+              "enum" : [ "Underweight", "Normal", "Overweight", "Obese" ]
+            }
+          }
+        },
+        "example" : {
+          "name" : "Lionel Messi",
+          "totalWeightInKilos" : 77,
+          "id" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+          "classification" : [ "Normal", "Normal" ]
+        }
+      },
+      "TreatmentPlan" : {
+        "required" : [ "doctorId", "hospitalId", "id", "patientId", "patientclassification", "treatmentPlan" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "patientId" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "doctorId" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "classification" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "example" : "Normal",
+              "enum" : [ "Underweight", "Normal", "Overweight", "Obese" ]
+            }
+          },
+          "prescription" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "example" : "None",
+              "enum" : [ "None", "Eat eggs", "Run 5 miles", "Run 15 miles" ]
+            }
+          }
+        },
+        "example" : {
+          "patientId" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+          "doctorId" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+          "prescription" : [ "None", "None" ],
+          "id" : "d290f1ee-6c54-4b01-90e6-d701748f0851",
+          "classification" : [ "Normal", "Normal" ]
+        }
+      }
+    }
+  }
+}
